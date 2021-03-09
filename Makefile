@@ -8,23 +8,23 @@ teardown-infrastructure:
 
 .PHONY: create-database
 create-database: setup-infrastructure
-	docker-compose --file ./docker-compose.infrastructure.yml run \
+	docker-compose --file ./docker-compose.infrastructure.yml run --rm \
 		-e PGHOST="postgres" 		\
 		-e PGUSER="postgres"		\
 		-e PGPASSWORD="postgres"	\
-		postgres createdb 'hospital'
+		postgres createdb 'library'
 
 .PHONY: drop-database
 drop-database: setup-infrastructure
-	docker-compose --file ./docker-compose.infrastructure.yml run \
+	docker-compose --file ./docker-compose.infrastructure.yml run --rm \
 	-e PGHOST="postgres" 		\
 	-e PGUSER="postgres"		\
 	-e PGPASSWORD="postgres"	\
-	postgres dropdb --force 'hospital'
+	postgres dropdb --force 'library'
 
 .PHONY: migrate-database
 migrate-database:
-	./sqitch deploy --target db:pg://postgres:postgres@localhost:5432/hospital
+	./sqitch deploy --target db:pg://postgres:postgres@localhost:5432/library
 
 .PHONY: verify-database
 verify-database:

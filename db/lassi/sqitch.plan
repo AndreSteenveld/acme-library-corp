@@ -1,0 +1,11 @@
+%syntax-version=1.0.0
+%project=lassi
+
+book 2021-03-09T20:19:37Z Andre Steenveld <AndreSteenveld-at-gmail.com> # Create the book table
+member 2021-03-09T20:24:07Z Andre Steenveld <AndreSteenveld-at-gmail.com> # Create member table
+reservation [book member] 2021-03-09T20:43:37Z Andre Steenveld <AndreSteenveld-at-gmail.com> # Create reservation table
+loan [book member] 2021-03-09T20:48:23Z Andre Steenveld <AndreSteenveld-at-gmail.com> # Create loan table
+return [loan] 2021-03-09T20:55:36Z Andre Steenveld <AndreSteenveld-at-gmail.com> # Create return table
+fee [loan] 2021-03-09T21:05:18Z Andre Steenveld <AndreSteenveld-at-gmail.com> # Create fee table
+author 2021-03-09T21:16:02Z Andre Steenveld <AndreSteenveld-at-gmail.com> # Create author table
+isbn_author [book author] 2021-03-09T21:17:52Z Andre Steenveld <AndreSteenveld-at-gmail.com> # Create author table
