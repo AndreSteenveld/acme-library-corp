@@ -40,8 +40,44 @@ namespace AndreSteenveld.Lassi
         {
             modelBuilder.HasAnnotation("Relational:Collation", "en_US.utf8");
 
+            modelBuilder.Entity<Author>(entity =>
+            {
+                entity.ToTable("author");
+
+                entity.Property(e => e.AuthorId).HasColumnName("author_id");
+
+                entity.Property(e => e.Name).HasColumnName("name");
+            });
+
+            modelBuilder.Entity<Book>(entity =>
+            {
+                entity.ToTable("book");
+
+                entity.Property(e => e.BookId).HasColumnName("book_id");
+
+                entity.Property(e => e.Isbn).HasColumnName("isbn");
+
+                entity.Property(e => e.Location).HasColumnName("location");
+
+                entity.Property(e => e.Title).HasColumnName("title");
+            });
+
             modelBuilder.Entity<Fee>(entity =>
             {
+                entity.ToTable("fee");
+
+                entity.Property(e => e.FeeId).HasColumnName("fee_id");
+
+                entity.Property(e => e.Amount).HasColumnName("amount");
+
+                entity.Property(e => e.LoanId).HasColumnName("loan_id");
+
+                entity.Property(e => e.Paid)
+                    .HasColumnType("date")
+                    .HasColumnName("paid");
+
+                entity.Property(e => e.Type).HasColumnName("type");
+
                 entity.HasOne(d => d.Loan)
                     .WithMany(p => p.Fees)
                     .HasForeignKey(d => d.LoanId)
@@ -50,6 +86,17 @@ namespace AndreSteenveld.Lassi
 
             modelBuilder.Entity<IsbnAuthor>(entity =>
             {
+                entity.HasNoKey();
+
+                entity.ToTable("isbn_author");
+
+                entity.HasIndex(e => new { e.Isbn, e.AuthorId }, "isbn_author_isbn_author_id_key")
+                    .IsUnique();
+
+                entity.Property(e => e.AuthorId).HasColumnName("author_id");
+
+                entity.Property(e => e.Isbn).HasColumnName("isbn");
+
                 entity.HasOne(d => d.Author)
                     .WithMany()
                     .HasForeignKey(d => d.AuthorId)
@@ -58,6 +105,18 @@ namespace AndreSteenveld.Lassi
 
             modelBuilder.Entity<Loan>(entity =>
             {
+                entity.ToTable("loan");
+
+                entity.Property(e => e.LoanId).HasColumnName("loan_id");
+
+                entity.Property(e => e.BookId).HasColumnName("book_id");
+
+                entity.Property(e => e.MemberId).HasColumnName("member_id");
+
+                entity.Property(e => e.Period)
+                    .HasColumnType("daterange")
+                    .HasColumnName("period");
+
                 entity.HasOne(d => d.Book)
                     .WithMany(p => p.Loans)
                     .HasForeignKey(d => d.BookId)
@@ -71,11 +130,33 @@ namespace AndreSteenveld.Lassi
 
             modelBuilder.Entity<Member>(entity =>
             {
-                entity.Property(e => e.MemberId).HasDefaultValueSql("gen_random_uuid()");
+                entity.ToTable("member");
+
+                entity.Property(e => e.MemberId)
+                    .HasColumnName("member_id")
+                    .HasDefaultValueSql("gen_random_uuid()");
+
+                entity.Property(e => e.ExpirationDate)
+                    .HasColumnType("date")
+                    .HasColumnName("expiration_date");
+
+                entity.Property(e => e.UserId).HasColumnName("user_id");
             });
 
             modelBuilder.Entity<Reservation>(entity =>
             {
+                entity.ToTable("reservation");
+
+                entity.Property(e => e.ReservationId).HasColumnName("reservation_id");
+
+                entity.Property(e => e.BookId).HasColumnName("book_id");
+
+                entity.Property(e => e.Date)
+                    .HasColumnType("date")
+                    .HasColumnName("date");
+
+                entity.Property(e => e.MemberId).HasColumnName("member_id");
+
                 entity.HasOne(d => d.Book)
                     .WithMany(p => p.Reservations)
                     .HasForeignKey(d => d.BookId)
@@ -91,6 +172,18 @@ namespace AndreSteenveld.Lassi
 
             modelBuilder.Entity<Return>(entity =>
             {
+                entity.HasNoKey();
+
+                entity.ToTable("return");
+
+                entity.Property(e => e.Date)
+                    .HasColumnType("date")
+                    .HasColumnName("date");
+
+                entity.Property(e => e.LoanId).HasColumnName("loan_id");
+
+                entity.Property(e => e.Note).HasColumnName("note");
+
                 entity.HasOne(d => d.Loan)
                     .WithMany()
                     .HasForeignKey(d => d.LoanId)
